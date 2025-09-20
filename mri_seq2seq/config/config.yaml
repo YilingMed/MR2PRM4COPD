@@ -1,0 +1,48 @@
+data:
+  image: /
+  train: data_list/subjects/gen/train.csv
+  valid: data_list/subjects/gen/valid.csv
+  test:  data_list/subjects/gen/test.csv
+  nomiss: True
+  
+seq2seq:
+  ndims: 3                # 2D model
+  c_s: 5                 # sequence code length  #64
+  c_w: 16                 # hyperconv weight length
+  c_in: 1                # input channels
+  c_enc: [8, 16, 32]   # channels for encoder [64, 128, 256]
+  k_enc: [5, 5, 5]        # ksize for encoder
+  s_enc: [2, 2, 1]        # strides for encoder
+  nres_enc: 6             # number of resblocks in encoder
+  norm: InstanceNorm      # normalization
+  c_lstm: 1             # channels for convlstm
+  c_dec: [32, 8, 3]     # channels for decoder [128, 64, 3]
+  k_dec: [5, 5, 5]        # ksize for decoder
+  s_dec: [1, 1, 1]        # strides for decoder
+  nres_dec: 6             # number of resblocks in decoder
+  pretrain: /ckpt_seq2seq_best.pth
+
+TSF_seq2seq:
+  c_s_source: 4
+  c_s_target: 1
+  c_w: 4
+  c_enc: [16]            # channels for encoder 256
+  k_enc: [3]              # ksize for encoder
+  s_enc: [1]              # strides for encoder
+  norm: None              # normalization
+
+train:
+  epochs: 500
+  total_steps: 300000
+  lr: 1e-4
+  rep_step: 1
+  crop_size: [60, 256, 256]
+  valid_size: [60, 256, 256]
+  lambda_rec: 0.6 #10
+  lambda_per: 0.01
+
+  lambda_cyc: 10
+  vis_steps: 500000 #128
+  ckpt_steps: 1280
+  vis: vis/tsf_seq2seq/
+  ckpt: ckpt/tsf_seq2seq/
